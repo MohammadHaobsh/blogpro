@@ -1,82 +1,85 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from .models import Post
-from .forms import PostForm
 
-# عرض الصفحة الرئيسية مع كل المنشورات
-def home(request):
-    posts = Post.objects.all()
-    return render(request, 'blog/home.html', {'posts': posts})
 
-# تسجيل الدخول
-def user_login(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('home')
-        else:
-            return render(request, 'blog/login.html', {'error': 'Invalid credentials'})
-    return render(request, 'blog/login.html')
+# عرض الصفحة الرئيسية (عرض المنشورات)
+class PostListView(ListView):
+    model = Post
+    template_name = 'blog/home.html'
+    context_object_name = 'posts'
 
-# تسجيل الخروج
-def user_logout(request):
-    logout(request)
-    return redirect('login')
 
-# إنشاء حساب جديد
-def signup(request):
+# إنشاء منشور جديد
+@method_decorator(login_required, name='dispatch')
+class PostCreateView(CreateView):
+    model = Post
+    template_name = 'blog/post_form.html'
+    fields = ['title', 'content']
+    success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
+# تعديل منشور
+@method_decorator(login_required, name='dispatch')
+class PostUpdateView(UpdateView):
+    model = Post
+    template_name = 'blog/post_form.html'
+    fields = ['title', 'content']
+    success_url = reverse_lazy('home')
+
+
+# حذف منشور
+@method_decorator(login_required, name='dispatch')
+class PostDeleteView(DeleteView):
+    model = Post
+    template_name = 'blog/post_confirm_delete.html'
+    success_url = reverse_lazy('home')
+
+
+# تسجيل المستخدم الجديد
+def signup_view(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('login')
+            user = form.save()
+            login(request, user)
+            return redirect('home')
     else:
         form = UserCreationForm()
-        return render(request, 'blog/signup.html', {'form': form})
+    return render(request, 'registration/signup.html', {'form': form})
 
-# عرض صفحة المستخدم الشخصية
-@login_required
-def profile(request):
-    posts = Post.objects.filter(author=request.user)
-    return render(request, 'blog/profile.html', {'posts': posts})
 
-# إنشاء منشور جديد
-@login_required
-def create_post(request):
+# تسجيل الدخول
+def signin_view(request):
     if request.method == 'POST':
-        form = PostForm(request.POST)
+        form = AuthenticationForm(data=request.POST)
         if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.save()
-            return redirect('profile')
+            user = form.get_user()
+            login(request, user)
+            return redirect('home')
     else:
-        form = PostForm()
-        return render(request, 'blog/post_form.html', {'form': form})
+        form = AuthenticationForm()
+    return render(request, 'registration/signin.html', {'form': form})
 
-# تعديل منشور موجود
-@login_required
-def update_post(request, id):
-    post = get_object_or_404(Post, id=id, author=request.user)
-    if request.method == 'POST':
-        form = PostForm(request.POST, instance=post)
-        if form.is_valid():
-            form.save()
-            return redirect('profile')
-    else:
-        form = PostForm(instance=post)
-        return render(request, 'blog/post_form.html', {'form': form})
 
-# حذف منشور
-@login_required
-def delete_post(request, id):
-    post = get_object_or_404(Post, id=id, author=request.user)
+# تسجيل الخروج
+def logout_view(request):
     if request.method == 'POST':
-        post.delete()
-        return redirect('profile')
-    return render(request, 'blog/post_confirm_delete.html', {'post': post})
+        logout(request)
+        return redirect('signin')
+
+
+# عرض الصفحة الشخصية
+@login_required
+def profile_view(request):
+    user_posts = Post.objects.filter(author=request.user)
+    return render(request, 'blog/profile.html', {'user': request.user, 'posts': user_posts})

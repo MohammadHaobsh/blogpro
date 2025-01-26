@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>إنشاء حساب جديد</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">إنشاء الحساب</button>
+    </form>
+    <p>لديك حساب بالفعل؟ <a href="{% url 'signin' %}">تسجيل الدخول</a></p>
+{% endblock %}

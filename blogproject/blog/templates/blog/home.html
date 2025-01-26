@@ -1,17 +1,17 @@
-<link rel="stylesheet" href="/static/styles.css">
-<h1 class="title">الصفحة الرئيسية</h1>
-{% if user.is_authenticated %}
-    <p>مرحباً {{ user.username }}! <a href="{% url 'profile' %}">صفحتك الشخصية</a> | <a href="{% url 'logout' %}">تسجيل الخروج</a></p>
-{% else %}
-    <a href="{% url 'login' %}">تسجيل الدخول</a> | <a href="{% url 'signup' %}">إنشاء حساب</a>
-{% endif %}
-
-<ul class="post-list">
-    {% for post in posts %}
-        <li class="post-item">
-            <strong>{{ post.title }}</strong> - {{ post.author.username }}<br>
-            {{ post.content }}<br>
-            <small>تمت إضافته بتاريخ: {{ post.created_at|date:"d-m-Y H:i" }}</small>
-        </li>
-    {% endfor %}
-</ul>
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container">
+        <h1>مرحبًا بكم في المدونة</h1>
+        <div class="post-list">
+            {% for post in posts %}
+                <div class="post">
+                    <h2>{{ post.title }}</h2>
+                    <p>{{ post.content|truncatewords:20 }}</p>
+                    <small>تم النشر بواسطة {{ post.author.username }} في {{ post.created_at }}</small>
+                </div>
+            {% empty %}
+                <p>لا توجد منشورات لعرضها.</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

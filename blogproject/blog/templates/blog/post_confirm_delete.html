@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>تأكيد حذف المنشور</h1>
+    <p>هل تريد حذف هذا المنشور؟</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">نعم، حذف</button>
+    </form>
+    <a href="{% url 'home' %}">إلغاء</a>
+{% endblock %}

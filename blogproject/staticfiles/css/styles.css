@@ -1,0 +1,76 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+header {
+    background-color: #007bff;
+    color: white;
+    padding: 15px 20px;
+}
+
+header nav a, header form .btn {
+    color: white;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+header nav a.btn, header form .btn {
+    padding: 8px 12px;
+    background-color: #0056b3;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+header nav a.btn:hover, header form .btn:hover {
+    background-color: #003f88;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2, h3 {
+    color: #0056b3;
+}
+
+.post {
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.post h2 {
+    margin: 0 0 10px;
+}
+
+.post small {
+    color: gray;
+}
+
+.actions a {
+    margin-right: 5px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.actions a:hover {
+    text-decoration: underline;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
