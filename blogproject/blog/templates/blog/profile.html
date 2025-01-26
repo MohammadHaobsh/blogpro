@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="/static/styles.css">
+<h1 class="title">صفحتك الشخصية</h1>
+<div class="profile-header">
+    <img class="profile-pic" src="/static/profile-placeholder.png" alt="صورة الملف الشخصي">
+    <p>مرحباً {{ user.username }}!</p>
+</div>
+<a href="{% url 'create_post' %}" class="btn">+ إنشاء منشور جديد</a>
+<ul class="post-list">
+    {% for post in posts %}
+        <li class="post-item">
+            <strong>{{ post.title }}</strong><br>
+            {{ post.content }}<br>
+            <small>تمت إضافته بتاريخ: {{ post.created_at|date:"d-m-Y H:i" }}</small><br>
+            <a href="{% url 'update_post' post.id %}" class="btn-edit">تعديل</a>
+            <a href="{% url 'delete_post' post.id %}" class="btn-delete">حذف</a>
+        </li>
+    {% endfor %}
+</ul>
+<a href="{% url 'logout' %}" class="btn">تسجيل الخروج</a>
