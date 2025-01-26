@@ -4,6 +4,7 @@
         <h1>صفحتي الشخصية</h1>
         <p>اسم المستخدم: {{ user.username }}</p>
         <p>البريد الإلكتروني: {{ user.email }}</p>
+        <a href="{% url 'post_create' %}" class="btn">انشاء منشور</a>
 
         <h2>منشوراتي</h2>
         <ul>

@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h1>إنشاء/تعديل منشور</h1>
+    <h1>إنشاء منشور</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">حفظ</button>
     </form>
+    <a href="{% url 'home' %}">إلغاء</a>
 {% endblock %}

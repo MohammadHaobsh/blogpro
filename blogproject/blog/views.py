@@ -19,7 +19,7 @@ class PostListView(ListView):
 @method_decorator(login_required, name='dispatch')
 class PostCreateView(CreateView):
     model = Post
-    template_name = 'blog/post_form.html'
+    template_name = 'blog/add_post_form.html'
     fields = ['title', 'content']
     success_url = reverse_lazy('home')
 
@@ -32,7 +32,7 @@ class PostCreateView(CreateView):
 @method_decorator(login_required, name='dispatch')
 class PostUpdateView(UpdateView):
     model = Post
-    template_name = 'blog/post_form.html'
+    template_name = 'blog/update_post_form.html'
     fields = ['title', 'content']
     success_url = reverse_lazy('home')
 
