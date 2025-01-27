@@ -8,14 +8,12 @@ from django.utils.decorators import method_decorator
 from .models import Post
 
 
-# عرض الصفحة الرئيسية (عرض المنشورات)
 class PostListView(ListView):
     model = Post
     template_name = 'blog/home.html'
     context_object_name = 'posts'
 
 
-# إنشاء منشور جديد
 @method_decorator(login_required, name='dispatch')
 class PostCreateView(CreateView):
     model = Post
@@ -28,7 +26,6 @@ class PostCreateView(CreateView):
         return super().form_valid(form)
 
 
-# تعديل منشور
 @method_decorator(login_required, name='dispatch')
 class PostUpdateView(UpdateView):
     model = Post
@@ -37,7 +34,6 @@ class PostUpdateView(UpdateView):
     success_url = reverse_lazy('home')
 
 
-# حذف منشور
 @method_decorator(login_required, name='dispatch')
 class PostDeleteView(DeleteView):
     model = Post
@@ -45,7 +41,6 @@ class PostDeleteView(DeleteView):
     success_url = reverse_lazy('home')
 
 
-# تسجيل المستخدم الجديد
 def signup_view(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -58,7 +53,6 @@ def signup_view(request):
     return render(request, 'registration/signup.html', {'form': form})
 
 
-# تسجيل الدخول
 def signin_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
@@ -71,14 +65,12 @@ def signin_view(request):
     return render(request, 'registration/signin.html', {'form': form})
 
 
-# تسجيل الخروج
 def logout_view(request):
     if request.method == 'POST':
         logout(request)
         return redirect('signin')
 
 
-# عرض الصفحة الشخصية
 @login_required
 def profile_view(request):
     user_posts = Post.objects.filter(author=request.user)
